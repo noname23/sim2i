@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.3/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container">
+        <h2>ChatNode</h2><hr/>
+    </div>
+
+    <div class="container">
+        <div id="messageList" class="bg-primary"></div>
+        <form class="form" id="sendMessageForm">
+            <div class="form-group">
+                <label>Message</label>
+                <textarea class="form-control" id="message"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Send" class="btn btn-md btn-info">
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script>
+        $(function () {
+            var  socket = io.connect();
+
+            $("#sendMessageForm").submit(function(e) {
+                e.preventDefault();
+
+                var message = $("#message").val();
+                socket.emit("send message",{
+                    message: message
+                });
+
+            });
+
+            socket.on("on message",function(data) {
+                $("#messageList").append(`<div class='alert alert-md alert-success'>${data.message}</div>`);
+            });
+        });
+    </script>
+</body>
+</html>
